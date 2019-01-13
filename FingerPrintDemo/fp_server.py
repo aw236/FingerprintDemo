@@ -52,7 +52,7 @@ def convertListToString(inList, isValue):
 
 # Set up pool of connections to Google SQL
 # Hard coded for up to 1000 concurrent SQL queries   
-# if beginning of server set up, connect to SQL else returns M_POOL
+# If beginning of server set up, connect to SQL else returns M_POOL
 async def get_pool(loop):
     global M_POOL
     if M_POOL: 
