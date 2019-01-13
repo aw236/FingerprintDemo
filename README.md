@@ -8,4 +8,4 @@ Fingerprint data is obtained from www.somniolabs.com's fingerprint2.js. This dat
 
 # Asynchronous HTTP server (fp_server.py)
 
-This Python server utilizes asyncio to perform asynchronous tasks. When it receives a HTTP POST request from www.somniolabs.com, it parses the request's fingerprint data and inserts it into a Google mySQL database. Afterwards, it sends a HTTP response to end communication with www.somniolabs.com.
+This HTTP server utilizes asyncio to perform asynchronous tasks. When it receives a HTTP POST request from www.somniolabs.com, it parses the request's fingerprint data and inserts it into a Google mySQL database. Afterwards, it sends a HTTP response to end communication with www.somniolabs.com.
