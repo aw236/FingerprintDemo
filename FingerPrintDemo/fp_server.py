@@ -34,6 +34,7 @@ instanceName = 'fp-test'
 tableName = 'fpTable'   
 
 
+
 # Convert JSON object to mySQL query string
 def convertListToString(inList, isValue):
     if len(inList) == 0:
@@ -49,6 +50,7 @@ def convertListToString(inList, isValue):
     result = result[:-2] + ")"
     return result
 
+    
 
 # Set up pool of connections to Google SQL
 # Hard coded for up to 1000 concurrent SQL queries   
@@ -67,6 +69,7 @@ async def get_pool(loop):
     return M_POOL                                    
 
 
+    
 # Closes Google SQL connections
 # Only called during server shutdown   
 def close_pool():
@@ -81,21 +84,20 @@ async def insertToSQL(dataParam):
     keyList = []
     valueList = []
     concatString = ""
+    curHash = ""
+    curDate = ""
     
     # Iterate through JSON object and convert to string for SQL query
     for aPair in dataParam:
         keyList.append("`" + aPair['key'] + "`")
         valueList.append(str(aPair['value']).replace("'", r"\'"))
-        concatString = concatString + str(aPair['value']).replace("'", r"\'")
-
-    # Do own hash of fingerprint 
-    ### REMOVE THIS LATER ###
-    hasher = hashlib.sha3_512()
-    hasher.update(concatString.encode('UTF-8'))
-    hashString = hasher.hexdigest()
-    
-    keyList.append('`concatHash`')   
-    valueList.append(hashString)    
+        concatString = concatString + str(aPair['value']).replace("'", r"\'") 
+        
+        if aPair['key'] == 'date':
+            curDate = aPair['value']
+        
+        if aPair['key'] == 'concatHash':
+            curHash = aPair['value']
         
     # Get column and value names as string for mySQL query
     columns = convertListToString(keyList, False)
@@ -107,14 +109,21 @@ async def insertToSQL(dataParam):
     connection = await pool.acquire()                                       
     cursor = await connection.cursor(aiomysql.DictCursor)
     
-    # Concatanate mySQL query string
-    sql = "INSERT INTO " + tableName + " " + columns + " VALUES " + values + ";"
-    
-    # Execute mySQL command and release thread
+    # Concatanate mySQL query string and execute query
+    # If hash is in the mySQL table, update else insert into table
+    sql = "UPDATE " + tableName + " SET date='" + curDate + "' WHERE concatHash='" + curHash + "';"
     await cursor.execute(sql)
-    await connection.commit()    
+    await connection.commit()       
+    
+    if cursor.rowcount == 0:
+        sql = "INSERT INTO " + tableName + " " + columns + " VALUES " + values + ";"
+        await cursor.execute(sql)
+        await connection.commit()   
+    
+    # Release thread 
     await cursor.close()     
     pool.release(connection)    
+    
     
     
 # Handler for HTTP POST request
@@ -123,6 +132,7 @@ async def post_handle(request):
     postData = await request.text()
     await insertToSQL(json.loads(postData))
     return web.Response()
+    
     
     
 def main():     

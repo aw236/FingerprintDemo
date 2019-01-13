@@ -29,11 +29,16 @@
   <script>
     setTimeout(function() {
         new Fingerprint2().get(function(result, components) {
+        var d = new Date();
+        var dateObj = { key : "date", value : d.toLocaleString() };
+        var hashObj = { key : "concatHash", value : result };
+        components[24] = dateObj;
+        components[25] = hashObj; 
+        
         console.log(result)
         console.log(components)
-        
+
         var outputStr = JSON.stringify(components);
-        //console.log(outputStr);
           
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("POST", "http://35.243.173.177:8080/", true); 
