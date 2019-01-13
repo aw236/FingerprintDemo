@@ -1,0 +1,35 @@
+To create mySQL fingerprint table:
+
+CREATE TABLE fpTable(
+   date TEXT,
+   user_agent VARCHAR(255) DEFAULT '',
+   language VARCHAR(255) DEFAULT '',
+   color_depth VARCHAR(255) DEFAULT '',
+   device_memory VARCHAR(255) DEFAULT '',
+   hardware_concurrency VARCHAR(255) DEFAULT '',
+   resolution VARCHAR(1024) DEFAULT '',
+   available_resolution VARCHAR(1024) DEFAULT '',
+   timezone_offset VARCHAR(255) DEFAULT '',
+   session_storage VARCHAR(255) DEFAULT '',
+   local_storage VARCHAR(255) DEFAULT '',
+   indexed_db VARCHAR(255) DEFAULT '',
+   open_database VARCHAR(255) DEFAULT '',
+   cpu_class VARCHAR(255) DEFAULT '',
+   navigator_platform VARCHAR(255) DEFAULT '',
+   regular_plugins VARCHAR(1024) DEFAULT '',
+   canvas TEXT,
+   webgl TEXT,
+   webgl_vendor VARCHAR(255) DEFAULT '',
+   adblock VARCHAR(255) DEFAULT '',
+   has_lied_languages VARCHAR(255) DEFAULT '',
+   has_lied_resolution VARCHAR(255) DEFAULT '',
+   has_lied_os VARCHAR(255) DEFAULT '',
+   has_lied_browser VARCHAR(255) DEFAULT '',
+   touch_support VARCHAR(1024) DEFAULT '',
+   js_fonts VARCHAR(2048) DEFAULT '',
+   concatHash VARCHAR(1024) DEFAULT '');
+
+
+To clear mySQL table:
+
+TRUNCATE fpTable;
