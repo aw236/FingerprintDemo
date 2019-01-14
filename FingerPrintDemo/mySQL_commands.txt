@@ -33,3 +33,7 @@ CREATE TABLE fpTable(
 To clear mySQL table:
 
 TRUNCATE fpTable;
+
+To connect to Google Cloud SQL:
+
+andrew@cloudshell:~ (dazzling-reach-228306)$ gcloud sql connect fp-test --user=root --quiet
